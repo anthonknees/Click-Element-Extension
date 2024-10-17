@@ -9,7 +9,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       console.log('Checking for the button...'); // Debug log
 
       const button = Array.from(document.querySelectorAll('span'))
-        .find(el => el.textContent.trim().toLowerCase() === 'accept & continue');
+        .find(el => el.textContent.trim().toLowerCase() === 'join the queue');
 
       if (button) {
         console.log('Button found, clicking...'); // Debug log
@@ -36,5 +36,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-// Automatically start the extension when the content script is loaded
-chrome.runtime.sendMessage({ action: 'start' });
+// Check if the extension should be started when the content script is loaded
+chrome.storage.sync.get(['enabledTabs'], (data) => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const currentTab = tabs[0];
+    const tabId = currentTab.id.toString();
+    const enabledTabs = data.enabledTabs || {};
+
+    if (enabledTabs[tabId]) {
+      chrome.runtime.sendMessage({ action: 'start' });
+    }
+  });
+});

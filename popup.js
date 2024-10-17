@@ -5,8 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentTab = tabs[0];
     const tabId = currentTab.id.toString();
 
-    chrome.storage.sync.get([tabId], function (data) {
-      toggle.checked = data[tabId] || false;
+    chrome.storage.sync.get(['enabledTabs'], function (data) {
+      const enabledTabs = data.enabledTabs || {};
+      toggle.checked = enabledTabs[tabId] || false;
     });
 
     toggle.addEventListener('change', function () {
