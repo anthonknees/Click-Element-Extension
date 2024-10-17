@@ -35,3 +35,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }, 1000);
   }
 });
+
+// Automatically start the extension when the content script is loaded
+chrome.runtime.sendMessage({ action: 'start' });
